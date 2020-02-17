@@ -1,0 +1,98 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title> Wonder Web </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+<body class="grey lighten-4">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 center" style="letter-spacing: 15px;"><h4>WONDER WEB PORTAL</h4></div>
+            <div class="col s12 center"><h5>Budgeting Your Code</h5></div>
+        </div>
+        
+
+        <div class="divider" style="margin-bottom:50px;"></div>
+
+        <div class="row">
+            <h5>Paste your code here [ctrl+u].</h5>
+            <div class="col s7"> 
+                    <!-- {% csrf_token %}            -->
+                    <textarea name="code" id="code" style="height:300px;background-color:#fff;"></textarea>
+                    <br>
+                    <button class="waves-effect waves-light btn blue center" id="analysebtn" style="margin-top:20px;" value="Analyse Code">Analyse Code</button>
+            </div>
+            <div class="col s5" id="sidepanel" style="display:none">
+                <h5 style="margin-top:0px;" class="green-text">Total Cost: <strong id="total_cost">INF</strong></h5> 
+                <p id="result"></p>
+                <table class="striped highlight grey">
+                    <thead>
+                        <th>Tag</th>
+                        <th>Times used</th>
+                        <th>Cumulative Cost</th>
+                    </thead>
+                    <tbody id="resultbox">
+                        
+                    </tbody>
+                </table>  
+            </div>
+        </div>
+
+        <div class="row">
+            <p class="center" style="margin-bottom:0px; padding-bottom: 0px;">&copy; Felicific 2020</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            var codearea = $("#code");
+            var button = $("#analysebtn");
+
+            button.click(function(){
+                var code = codearea.val();
+                
+                $.ajax({
+                    url:'getresult',
+                    type:'post',
+                    data: {
+                        'code':code,
+                    },
+                    dataType:'json',
+                    success:function(result)
+                    { 
+                        //$("#result").text(JSON.stringify(result));
+                        resultbox = $("#resultbox");
+
+                        if(result["status"]!="success")
+                            return;
+
+                        var i;
+                        var sum = 0;
+                        for(i=0;i<result["cost_table"].length;i++)
+                        {
+                            col1 = "<td title" + result["cost_table"][i][1] + ">" + result["cost_table"][i][0] + "</td>";
+                            col2 = "<td>" + result["cost_table"][i][2] + "</td>";
+                            var cumulativecost = result["cost_table"][i][1]*result["cost_table"][i][2];
+                            col3 = "<td>" + cumulativecost + "</td>";
+
+                            row = "<tr>" + col1 + col2 + col3 + "</tr>";
+                            $(row).appendTo(resultbox);
+                            
+                            sum = sum + cumulativecost;
+                        }
+
+                        $("#total_cost").text(sum);
+                        $("#sidepanel").show();
+                        
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
