@@ -28,8 +28,7 @@
                     <button class="waves-effect waves-light btn blue center" id="analysebtn" style="margin-top:20px;" value="Analyse Code">Analyse Code</button>
             </div>
             <div class="col s5" id="sidepanel" style="display:none">
-                <h5 style="margin-top:0px;" class="green-text">Total Cost: <strong id="total_cost">INF</strong></h5> 
-                <p id="result"></p>
+                <h5 style="margin-top:0px;" class="green-text" id="result">Total Cost: <strong id="total_cost">INF</strong></h5> 
                 <table class="striped highlight grey">
                     <thead>
                         <th>Tag</th>
@@ -68,8 +67,29 @@
                         //$("#result").text(JSON.stringify(result));
                         resultbox = $("#resultbox");
 
-                        if(result["status"]!="success")
+                        if(result["status"]=="invalid_script")
+                        {
+
+                            console.log("hi");
+                            $("#sidepanel").show();
+                            $("#result").text("Remove Script Tags");
+                            $("#result").show();
+                            $("table").hide();
                             return;
+                        }
+
+
+                        if(result["status"]=="invalid_nocode")
+                        {
+                            console.log("hi");
+                            $("#sidepanel").show();
+                            $("#result").text("Remove Script Tags");
+                            $("#result").show();
+                            $("table").hide();
+                            return;
+                        }
+
+                        
 
                         var i;
                         var sum = 0;

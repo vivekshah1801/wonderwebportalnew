@@ -84,5 +84,8 @@ def getresult(request):
 def home(request):
     return render(request,'analyse.html')    
 
+def index(request):
+    return render(request, 'index.html')
+
 def submit(request):
     return render(request,'submit.html')

@@ -19,7 +19,8 @@ from wonderwebportal.view import *
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
-    path('',home),
+    path('',index),
+    path('analyse',home),
     path('getresult',getresult),
     path('submit',submit),
 ]
