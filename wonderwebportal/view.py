@@ -4,6 +4,8 @@ from wonderwebportal.templates import *
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from submission.models import submissions
+from http.client import HTTPResponse
 
 default_tag_cost = 100
 
@@ -88,4 +90,17 @@ def index(request):
     return render(request, 'index.html')
 
 def submit(request):
-    return render(request,'submit.html')
+    if request.method == "GET":
+        print('render')
+        return render(request,'submit.html')
+    else:
+        name= request.POST.get('name','')
+        id  = request.POST.get('secretkey','')
+        file = request.FILES['submission']
+        try:
+            temp = submissions.objects.get(id=id)
+            return JsonResponse({'status':'already'})
+        except:
+            s = submissions(name=name,id=id,file=file)
+            s.save()
+            return JsonResponse({'status':'saved'})
